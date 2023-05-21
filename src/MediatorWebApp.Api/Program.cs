@@ -10,7 +10,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         connectionString, 
-        x => x.MigrationsAssembly(typeof(Program).GetTypeInfo().Assembly.GetName().Name)
+        x => x.MigrationsAssembly("MediatorWebApp")
         )
     );
 
@@ -36,7 +36,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MigrateDatabase();
+//app.MigrateDatabase();
 
 app.Run();
 
@@ -50,7 +50,11 @@ public static class MigrationManager
             {
                 try
                 {
-                    appContext.Database.Migrate();
+                    if (!appContext.Users.Any())
+                    {
+                        appContext.Database.Migrate();
+                    }
+
                 }
                 catch (Exception ex)
                 {

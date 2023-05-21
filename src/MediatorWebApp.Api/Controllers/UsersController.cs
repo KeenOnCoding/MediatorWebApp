@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatorWebApp.Core;
+using MediatorWebApp.Core.Handlers.Command;
 using MediatorWebApp.Core.Handlers.Query;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -34,13 +35,7 @@ namespace MediatorWebApp.Controllers
         {
             var map = _mapper.Map<User>(user);
 
-            if (_context.Users == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Users'  is null.");
-            }
-
-            _context.Users.Add(map);
-            await _context.SaveChangesAsync();
+            await _mediator.Send(new CreateUserCommand() { User = map});
 
             return Ok(map);
         }
