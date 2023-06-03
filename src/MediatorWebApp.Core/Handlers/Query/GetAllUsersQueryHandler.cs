@@ -1,6 +1,6 @@
-﻿using MediatorWebApp.Core.Models;
+﻿using Dapper;
+using MediatorWebApp.Core.Models;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace MediatorWebApp.Core.Handlers.Query
 {
@@ -8,16 +8,27 @@ namespace MediatorWebApp.Core.Handlers.Query
     {
         private readonly ApplicationDbContext _context;
         private readonly IMediator _mediator;
+        private readonly DapperContext _dapperContext;
 
-        public GetAllUsersQueryHandler(ApplicationDbContext context, IMediator mediator)
-            => (_context, _mediator) = (context, mediator);
+        public GetAllUsersQueryHandler(ApplicationDbContext context, IMediator mediator, DapperContext dapperContext)
+            => (_context, _mediator, _dapperContext) = (context, mediator, dapperContext);
 
 
         public async Task<List<User>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
         {
-            var result = await _context.Users.ToListAsync();
+            //var result = await _context.Users.ToListAsync();
+            var result = (await GetCompanies()).ToList();
             await _mediator.Publish(new UserGetNotification() { Users = result });
             return result;
+        }
+        public async Task<IEnumerable<User>> GetCompanies()
+        {
+            var query = "SELECT * FROM Users";
+            using (var connection = _dapperContext.CreateConnection())
+            {
+                var companies = await connection.QueryAsync<User>(query);
+                return companies;
+            }
         }
     }
 }

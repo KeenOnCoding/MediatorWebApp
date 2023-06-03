@@ -10,9 +10,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         connectionString, 
-        x => x.MigrationsAssembly("MediatorWebApp")
-        )
-    );
+        x => x.MigrationsAssembly("MediatorWebApp")));
+
+builder.Services.AddSingleton<DapperContext>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
