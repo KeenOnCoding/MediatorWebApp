@@ -1,9 +1,8 @@
 using MediatorWebApp.Core;
 using MediatR;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
