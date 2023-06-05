@@ -6,13 +6,13 @@ namespace MediatorWebApp.Core
     public  class DapperContext
     {
         //private readonly IConfiguration _configuration;
-        //private readonly string _connectionString;
-        public DapperContext()
+        private readonly string _connectionString;
+        public DapperContext(string connectionString)
         {
             //_configuration = configuration;
-            //_connectionString = _configuration.GetConnectionString("SqlConnection");
+            _connectionString = connectionString;
         }
         public IDbConnection CreateConnection()
-            => new SqlConnection("Server=(localdb)\\mssqllocaldb;Database=Mediator;Trusted_Connection=True;MultipleActiveResultSets=true");
+            => new SqlConnection(_connectionString);
     }
 }

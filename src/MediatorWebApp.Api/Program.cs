@@ -1,6 +1,8 @@
 using MediatorWebApp.Core;
 using MediatR;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +14,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         connectionString, 
         x => x.MigrationsAssembly("MediatorWebApp")));
 
-builder.Services.AddSingleton<DapperContext>();
+builder.Services.AddDapper(connectionString);
 
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
@@ -39,6 +41,15 @@ app.MapControllers();
 //app.MigrateDatabase();
 
 app.Run();
+
+public static class Exten
+{
+    public static IServiceCollection AddDapper(this IServiceCollection services, string? connectionString)
+    {
+
+        return services.AddSingleton(x => ActivatorUtilities.CreateInstance<DapperContext>(x, connectionString));
+    }
+}
 
 public static class MigrationManager
 {
