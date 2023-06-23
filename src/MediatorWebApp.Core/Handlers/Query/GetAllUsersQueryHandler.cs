@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using MediatorWebApp.Core.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace MediatorWebApp.Core.Handlers.Query
 {
@@ -16,8 +17,8 @@ namespace MediatorWebApp.Core.Handlers.Query
 
         public async Task<List<User>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
         {
-            //var result = await _context.Users.ToListAsync();
-            var result = (await GetCompanies()).ToList();
+            var result = await _context.Users.ToListAsync();
+            //var result = (await GetCompanies()).ToList();
             await _mediator.Publish(new UserGetNotification() { Users = result });
             return result;
         }
