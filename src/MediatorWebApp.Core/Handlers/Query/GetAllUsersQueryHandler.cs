@@ -31,5 +31,15 @@ namespace MediatorWebApp.Core.Handlers.Query
                 return companies;
             }
         }
+        public async Task<List<User>> GetAllUsers()
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                //var query = $"SELECT * FROM Users";
+                return await _context.Users
+               .FromSql($"SELECT * FROM Users")
+               .ToListAsync();
+            }
+        }
     }
 }
