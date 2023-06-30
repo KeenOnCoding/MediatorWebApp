@@ -1,5 +1,6 @@
 using EFCoreSecondLevelCacheInterceptor;
 using MediatorWebApp.Core;
+using MediatorWebApp.Core.Filters;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,7 +40,11 @@ builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
 builder.Services.AddMediatR(typeof(IHandler).Assembly);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(typeof(HttpGlobalExceptionFilter));
+    options.Filters.Add(typeof(ValidateModelStateFilter));
+});
 
 builder.Services.AddEndpointsApiExplorer();
 
